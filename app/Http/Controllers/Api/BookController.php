@@ -21,9 +21,11 @@ class BookController extends Controller
             'isbn' => ['required', 'string', 'size:13', 'unique:books,isbn'],
         ]);
         $book = Book::create($validated);
-        return (new BookRessource($book))->response()->setStatusCode(201);
+        return new BookRessource($book);
     }
-    public function show(Book $book){return new BookResource($book);}
+    public function show(Book $book){
+        return new BookResource($book);
+    }
     public function update(Request $request, Book $book){
         $validated = $request->validate([
             'title' => ['required', 'string', 'min:3', 'max:255'],
@@ -36,6 +38,6 @@ class BookController extends Controller
     }
     public function destroy(Book $book){
         $book->delete();
-        return response()->json(null, 204);
+        return response()->noContent();
     }
 }
