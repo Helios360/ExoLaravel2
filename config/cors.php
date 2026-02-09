@@ -5,7 +5,7 @@ return [
     // Routes sur lesquelles appliquer CORS (API et endpoint Sanctum).
     'paths' => ['api/*', 'sanctum/csrf-cookie'],
     'allowed_methods' => ['*'], // Méthodes HTTP autorisées.
-    'allowed_origins' => ['http://127.0.0.1:8000'], // Origines autorisées (en dev : *, en prod : domaines précis).
+    'allowed_origins' => ['http://localhost:5173'], // Origines autorisées (en dev : *, en prod : domaines précis).
     // Permet d’autoriser des origines via des motifs (regex). Rarement utilisé.
     'allowed_origins_patterns' => [],
     'allowed_headers' => ['*'], // Headers acceptés dans la requête.
