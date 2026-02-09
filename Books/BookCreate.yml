@@ -1,10 +1,10 @@
 info:
-  name: BookFetch
+  name: BookCreate
   type: http
-  seq: 1
+  seq: 3
 
 http:
-  method: GET
+  method: POST
   url: "{{URL}}/books"
   auth: inherit
 
