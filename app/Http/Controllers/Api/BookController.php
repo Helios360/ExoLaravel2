@@ -29,6 +29,7 @@ class BookController extends Controller
         $data = Cache::remember($cacheKey, 60*60, function () use ($book) {
             return Book::query()->select(['id', 'title', 'author', 'summary', 'isbn'])->findOrFail($book->id);
         });
+        
         return new BookResource($data);
     }
     public function update(Request $request, Book $book){
