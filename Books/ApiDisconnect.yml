@@ -1,0 +1,20 @@
+info:
+  name: ApiDisconnect
+  type: http
+  seq: 8
+
+http:
+  method: POST
+  url: "{{URL}}/logout"
+  body:
+    type: json
+    data: ""
+  auth:
+    type: bearer
+    token: 1|oJYg6hGNKHNaBcS3ExhBs7kIdGAmROEfLtHM28de56deb022
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

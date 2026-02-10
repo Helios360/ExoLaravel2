@@ -1,11 +1,11 @@
 info:
   name: BookDelete
   type: http
-  seq: 6
+  seq: 5
 
 http:
   method: DELETE
-  url: "{{URL}}/books/{{id}}"
+  url: "{{URL}}/books/2"
   auth: inherit
 
 settings:

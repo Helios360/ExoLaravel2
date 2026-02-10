@@ -1,0 +1,23 @@
+info:
+  name: ApiRegister
+  type: http
+  seq: 6
+
+http:
+  method: POST
+  url: "{{URL}}/register"
+  body:
+    type: json
+    data: |
+      {
+        "name": "elias",
+        "email": "elias@test.com",
+        "password": "password123"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

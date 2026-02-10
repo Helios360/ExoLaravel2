@@ -1,11 +1,11 @@
 info:
   name: BookUpdate
   type: http
-  seq: 5
+  seq: 4
 
 http:
   method: PUT
-  url: "{{URL}}/books/{{id}}"
+  url: "{{URL}}/books/1"
   auth: inherit
 
 settings:

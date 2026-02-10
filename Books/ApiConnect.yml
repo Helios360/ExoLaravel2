@@ -1,0 +1,22 @@
+info:
+  name: ApiConnect
+  type: http
+  seq: 7
+
+http:
+  method: POST
+  url: "{{URL}}/login"
+  body:
+    type: json
+    data: |-
+      {
+        "email": "elias@test.com",
+        "password": "password123"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
