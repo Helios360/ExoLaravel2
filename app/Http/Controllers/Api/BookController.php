@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\BookResource;
 use App\Http\Controllers\Controller;
 use App\Models\Book;
@@ -11,7 +12,7 @@ use App\Models\Book;
 class BookController extends Controller
 {
     public function index(){
-        return BookResource::collection(Book::query()->latest()->paginate(10));
+        return BookResource::collection(Book::query()->latest()->paginate(2));
     }
     public function store(Request $request){
         $validated = $request->validate([
@@ -24,7 +25,11 @@ class BookController extends Controller
         return new BookRessource($book);
     }
     public function show(Book $book){
-        return new BookResource($book);
+        $cacheKey = "book:{$book->id}";
+        $data = Cache::remember($cacheKey, 60*60, function () use ($book) {
+            return Book::query()->select(['id', 'title', 'author', 'summary', 'isbn'])->findOrFail($book->id);
+        });
+        return new BookResource($data);
     }
     public function update(Request $request, Book $book){
         $validated = $request->validate([
@@ -34,10 +39,13 @@ class BookController extends Controller
             'isbn' => ['required', 'string', 'size:13', Rule::unique('books', 'isbn')->ignore($book->id)],
         ]);
         $book->update($validated);
+        Cache::forget("book:{$book->id}");
         return new BookRessource($book);
     }
     public function destroy(Book $book){
+        Cache::forget("book:{$book->id}");
         $book->delete();
+        Cache::forget("book:{$book->id}");
         return response()->noContent();
     }
 }
