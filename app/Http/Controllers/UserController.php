@@ -10,6 +10,24 @@ use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
+    #[OA\Post(
+        path: "/api/register",
+        summary: "Créer un compte",
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                example: [
+                    "name" => "John",
+                    "email" => "john@mail.com",
+                    "password" => "password123"
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(response: 201, description: "Créé"),
+            new OA\Response(response: 422, description: "Validation error")
+        ]
+    )]
     public function register(Request $request){
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -28,6 +46,23 @@ class UserController extends Controller
             'token' => $token,
         ], 201);
     }
+    #[OA\Post(
+        path: "/api/login",
+        summary: "Connexion",
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                example: [
+                    "email" => "john@mail.com",
+                    "password" => "password123"
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(response: 200, description: "OK"),
+            new OA\Response(response: 422, description: "Credentials invalides")
+        ]
+    )]
     public function login(Request $request){
         $validated = $request->validate([
             'email' => ['required', 'email'],

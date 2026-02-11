@@ -10,3 +10,10 @@ use OpenApi\Attributes as OA;
     description:"Doc"
 )]
 class OpenApiSpec {}
+#[OA\SecurityScheme(
+    securityScheme: "bearerAuth",
+    type: "http",
+    scheme: "bearer",
+    bearerFormat: "Token"
+)]
+class OpenApiSecurity {}

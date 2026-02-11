@@ -6,15 +6,159 @@
         "version": "1.0.0"
     },
     "paths": {
-        "/api/users": {
+        "/api/books": {
             "get": {
-                "summary": "Liste des utilisateurs",
-                "operationId": "4eb6c4adc681423d1ff4520aa0e95016",
+                "summary": "Lister les livres",
+                "operationId": "9017a3fa89d6636329067c858b27a6fa",
                 "responses": {
                     "200": {
-                        "description": "Succès"
+                        "description": "OK"
                     }
                 }
+            },
+            "post": {
+                "summary": "Créer un livre",
+                "operationId": "72f82e1cd6f08112323f87053277ca99",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {},
+                            "example": {
+                                "title": "Clean Code",
+                                "author": "Robert C. Martin",
+                                "summary": "A handbook of agile software craftsmanship.",
+                                "isbn": "9780132350884"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Créé"
+                    },
+                    "401": {
+                        "description": "Non authentifié"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/books/{book}": {
+            "get": {
+                "summary": "Détail d’un livre",
+                "operationId": "c977385c32095dec31075ca1f77c3cd7",
+                "parameters": [
+                    {
+                        "name": "book",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "Non trouvé"
+                    }
+                }
+            },
+            "put": {
+                "summary": "Mettre à jour un livre",
+                "operationId": "66285ba337428238f9ea30fdca856ef6",
+                "parameters": [
+                    {
+                        "name": "book",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {},
+                            "example": {
+                                "title": "Clean Architecture",
+                                "author": "Robert C. Martin",
+                                "summary": "Updated guide.",
+                                "isbn": "9780134494166"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Non authentifié"
+                    },
+                    "404": {
+                        "description": "Non trouvé"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "summary": "Supprimer un livre",
+                "operationId": "5bf2d40ecbd2142dabcca0ec2b075369",
+                "parameters": [
+                    {
+                        "name": "book",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Supprimé"
+                    },
+                    "401": {
+                        "description": "Non authentifié"
+                    },
+                    "404": {
+                        "description": "Non trouvé"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "Token",
+                "scheme": "bearer"
             }
         }
     }
