@@ -8,9 +8,19 @@ use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\BookResource;
 use App\Http\Controllers\Controller;
 use App\Models\Book;
+use OpenApi\Attributes as OA;
 
 class BookController extends Controller
 {
+    #[OA\Get(
+        path: "/api/users",
+        summary: "Liste des utilisateurs",
+        responses: [
+            new OA\Response(
+            response: 200,
+            description: "Succès"
+        )]
+    )]
     public function index(){
         return BookResource::collection(Book::query()->latest()->paginate(2));
     }
@@ -22,7 +32,7 @@ class BookController extends Controller
             'isbn' => ['required', 'string', 'size:13', 'unique:books,isbn'],
         ]);
         $book = Book::create($validated);
-        return new BookRessource($book);
+        return new BookResource($book);
     }
     public function show(Book $book){
         $cacheKey = "book:{$book->id}";
@@ -41,7 +51,7 @@ class BookController extends Controller
         ]);
         $book->update($validated);
         Cache::forget("book:{$book->id}");
-        return new BookRessource($book);
+        return new BookResource($book);
     }
     public function destroy(Book $book){
         Cache::forget("book:{$book->id}");

@@ -1,0 +1,21 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Exolaravel API",
+        "description": "Doc",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/users": {
+            "get": {
+                "summary": "Liste des utilisateurs",
+                "operationId": "4eb6c4adc681423d1ff4520aa0e95016",
+                "responses": {
+                    "200": {
+                        "description": "Succès"
+                    }
+                }
+            }
+        }
+    }
+}
