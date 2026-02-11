@@ -12,20 +12,40 @@ class UserController extends Controller
 {
     #[OA\Post(
         path: "/api/register",
-        summary: "Créer un compte",
+        tags: ["Auth"],
+        summary: "Register",
+        parameters: [
+            new OA\Parameter(name: "Accept", in: "header", required: true, schema: new OA\Schema(type: "string"), example: "application/json"),
+            new OA\Parameter(name: "Content-Type", in: "header", required: true, schema: new OA\Schema(type: "string"), example: "application/json"),
+        ],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
                 example: [
-                    "name" => "John",
-                    "email" => "john@mail.com",
-                    "password" => "password123"
+                    "name" => "Abdelkader",
+                    "email" => "abdelkader@example.com",
+                    "password" => "Password123!"
                 ]
             )
         ),
         responses: [
-            new OA\Response(response: 201, description: "Créé"),
-            new OA\Response(response: 422, description: "Validation error")
+            new OA\Response(
+                response: 201,
+                description: "Créé",
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: "message", type: "string", example: "Utilisateur créé avec succès"),
+                        new OA\Property(property: "user", ref: "#/components/schemas/User"),
+                        new OA\Property(property: "token", type: "string", example: "1|xxxxxxxxxxxxxxxxxxxxxxxx")
+                    ],
+                    type: "object"
+                )
+            ),
+            new OA\Response(
+                response: 422,
+                description: "Validation error",
+                content: new OA\JsonContent(ref: "#/components/schemas/ValidationError")
+            )
         ]
     )]
     public function register(Request $request){
@@ -48,19 +68,47 @@ class UserController extends Controller
     }
     #[OA\Post(
         path: "/api/login",
-        summary: "Connexion",
+        tags: ["Auth"],
+        summary: "Login",
+        parameters: [
+            new OA\Parameter(name: "Accept", in: "header", required: true, schema: new OA\Schema(type: "string"), example: "application/json"),
+            new OA\Parameter(name: "Content-Type", in: "header", required: true, schema: new OA\Schema(type: "string"), example: "application/json"),
+        ],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
                 example: [
-                    "email" => "john@mail.com",
-                    "password" => "password123"
+                    "email" => "abdelkader@example.com",
+                    "password" => "Password123!"
                 ]
             )
         ),
         responses: [
-            new OA\Response(response: 200, description: "OK"),
-            new OA\Response(response: 422, description: "Credentials invalides")
+            new OA\Response(
+                response: 200,
+                description: "OK",
+                content: new OA\JsonContent(
+                    type: "object",
+                    properties: [
+                        new OA\Property(property: "message", type: "string", example: "Connexion établie"),
+                        new OA\Property(property: "user", ref: "#/components/schemas/User"),
+                        new OA\Property(property: "token", type: "string", example: "1|xxxxxxxxxxxxxxxxxxxxxxxx")
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 422,
+                description: "Identifiants invalides / validation error",
+                content: new OA\JsonContent(
+                    type: "object",
+                    example: [
+                        "message" => "The given data was invalid.",
+                        "errors" => [
+                            "email" => ["Identifiants incorects."]
+                        ]
+                    ]
+                )
+            )
         ]
     )]
     public function login(Request $request){
@@ -81,6 +129,31 @@ class UserController extends Controller
             'token' => $token,
         ]);
     }
+    #[OA\Post(
+        path: "/api/logout",
+        tags: ["Auth"],
+        summary: "Logout",
+        security: [["bearerAuth" => []]],
+        parameters: [
+            new OA\Parameter(name: "Accept", in: "header", required: true, schema: new OA\Schema(type: "string"), example: "application/json"),
+            new OA\Parameter(name: "Authorization", in: "header", required: true, schema: new OA\Schema(type: "string"), example: "Bearer 1|xxxxxxxxxxxxxxxxxxxxxxxx"),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: "OK",
+                content: new OA\JsonContent(
+                    type: "object",
+                    example: ["message" => "Déconnexion réussie."]
+                )
+            ),
+            new OA\Response(
+                response: 401,
+                description: "Non authentifié",
+                content: new OA\JsonContent(ref: "#/components/schemas/UnauthenticatedError")
+            )
+        ]
+    )]
     public function logout(Request $request){
         $request->user()->currentAccessToken()->delete();
         return response()->json([

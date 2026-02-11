@@ -14,33 +14,75 @@ class BookController extends Controller
 {
     #[OA\Get(
         path: "/api/books",
-        summary: "Lister les livres",
+        tags: ["Books"],
+        summary: "Index (liste paginée)",
+        parameters: [
+            new OA\Parameter(name: "Accept", in: "header", required: true, schema: new OA\Schema(type: "string"), example: "application/json"),
+            new OA\Parameter(name: "page", in: "query", required: false, schema: new OA\Schema(type: "integer"), example: 1),
+        ],
         responses: [
-            new OA\Response(response: 200, description: "OK")
+            new OA\Response(
+                response: 200,
+                description: "OK",
+                content: new OA\JsonContent(
+                    type: "object",
+                    example: [
+                        "data" => [
+                            [
+                                "id" => 11,
+                                "title" => "Clean Code",
+                                "author" => "Robert C. Martin",
+                                "summary" => "A handbook of agile software craftsmanship.",
+                                "isbn" => "9780132350884"
+                            ]
+                        ],
+                        "links" => ["first" => "...", "last" => "...", "prev" => null, "next" => "..."],
+                        "meta" => ["current_page" => 1, "per_page" => 2, "total" => 10]
+                    ]
+                )
+            )
         ]
     )]
-    public function index(){
-        return BookResource::collection(Book::query()->latest()->paginate(2));
-    }
     #[OA\Post(
         path: "/api/books",
-        summary: "Créer un livre",
+        tags: ["Books"],
+        summary: "Store (création)",
         security: [["bearerAuth" => []]],
+        parameters: [
+            new OA\Parameter(name: "Accept", in: "header", required: true, schema: new OA\Schema(type: "string"), example: "application/json"),
+            new OA\Parameter(name: "Content-Type", in: "header", required: true, schema: new OA\Schema(type: "string"), example: "application/json"),
+            new OA\Parameter(name: "Authorization", in: "header", required: true, schema: new OA\Schema(type: "string"), example: "Bearer 1|xxxxxxxxxxxxxxxxxxxxxxxx"),
+        ],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
                 example: [
-                    "title" => "Clean Code",
+                    "title" => "Clean Architecture",
                     "author" => "Robert C. Martin",
-                    "summary" => "A handbook of agile software craftsmanship.",
-                    "isbn" => "9780132350884"
+                    "summary" => "A guide to software structure and design.",
+                    "isbn" => "9780134494166"
                 ]
             )
         ),
         responses: [
-            new OA\Response(response: 200, description: "Créé"),
-            new OA\Response(response: 401, description: "Non authentifié"),
-            new OA\Response(response: 422, description: "Validation error")
+            new OA\Response(
+                response: 200,
+                description: "OK (créé)",
+                content: new OA\JsonContent(
+                    type: "object",
+                    example: [
+                        "data" => [
+                            "id" => 12,
+                            "title" => "Clean Architecture",
+                            "author" => "Robert C. Martin",
+                            "summary" => "A guide to software structure and design.",
+                            "isbn" => "9780134494166"
+                        ]
+                    ]
+                )
+            ),
+            new OA\Response(response: 401, description: "Non authentifié", content: new OA\JsonContent(ref: "#/components/schemas/UnauthenticatedError")),
+            new OA\Response(response: 422, description: "Validation error", content: new OA\JsonContent(ref: "#/components/schemas/ValidationError")),
         ]
     )]
     public function store(Request $request){
@@ -55,13 +97,30 @@ class BookController extends Controller
     }
     #[OA\Get(
         path: "/api/books/{book}",
-        summary: "Détail d’un livre",
+        tags: ["Books"],
+        summary: "Show (détail)",
         parameters: [
-            new OA\Parameter(name: "book", in: "path", required: true, schema: new OA\Schema(type: "integer"))
+            new OA\Parameter(name: "Accept", in: "header", required: true, schema: new OA\Schema(type: "string"), example: "application/json"),
+            new OA\Parameter(name: "book", in: "path", required: true, schema: new OA\Schema(type: "integer"), example: 12),
         ],
         responses: [
-            new OA\Response(response: 200, description: "OK"),
-            new OA\Response(response: 404, description: "Non trouvé")
+            new OA\Response(
+                response: 200,
+                description: "OK",
+                content: new OA\JsonContent(
+                    type: "object",
+                    example: [
+                        "data" => [
+                            "id" => 12,
+                            "title" => "Clean Architecture",
+                            "author" => "Robert C. Martin",
+                            "summary" => "A guide to software structure and design.",
+                            "isbn" => "9780134494166"
+                        ]
+                    ]
+                )
+            ),
+            new OA\Response(response: 404, description: "Non trouvé", content: new OA\JsonContent(ref: "#/components/schemas/NotFoundError")),
         ]
     )]
     public function show(Book $book){
@@ -74,16 +133,20 @@ class BookController extends Controller
     }
     #[OA\Put(
         path: "/api/books/{book}",
-        summary: "Mettre à jour un livre",
+        tags: ["Books"],
+        summary: "Update",
         security: [["bearerAuth" => []]],
         parameters: [
-            new OA\Parameter(name: "book", in: "path", required: true, schema: new OA\Schema(type: "integer"))
+            new OA\Parameter(name: "Accept", in: "header", required: true, schema: new OA\Schema(type: "string"), example: "application/json"),
+            new OA\Parameter(name: "Content-Type", in: "header", required: true, schema: new OA\Schema(type: "string"), example: "application/json"),
+            new OA\Parameter(name: "Authorization", in: "header", required: true, schema: new OA\Schema(type: "string"), example: "Bearer 1|xxxxxxxxxxxxxxxxxxxxxxxx"),
+            new OA\Parameter(name: "book", in: "path", required: true, schema: new OA\Schema(type: "integer"), example: 12),
         ],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
                 example: [
-                    "title" => "Clean Architecture",
+                    "title" => "Clean Architecture (2nd Edition)",
                     "author" => "Robert C. Martin",
                     "summary" => "Updated guide.",
                     "isbn" => "9780134494166"
@@ -91,10 +154,25 @@ class BookController extends Controller
             )
         ),
         responses: [
-            new OA\Response(response: 200, description: "OK"),
-            new OA\Response(response: 401, description: "Non authentifié"),
-            new OA\Response(response: 404, description: "Non trouvé"),
-            new OA\Response(response: 422, description: "Validation error")
+            new OA\Response(
+                response: 200,
+                description: "OK",
+                content: new OA\JsonContent(
+                    type: "object",
+                    example: [
+                        "data" => [
+                            "id" => 12,
+                            "title" => "Clean Architecture (2nd Edition)",
+                            "author" => "Robert C. Martin",
+                            "summary" => "Updated guide.",
+                            "isbn" => "9780134494166"
+                        ]
+                    ]
+                )
+            ),
+            new OA\Response(response: 401, description: "Non authentifié", content: new OA\JsonContent(ref: "#/components/schemas/UnauthenticatedError")),
+            new OA\Response(response: 404, description: "Non trouvé", content: new OA\JsonContent(ref: "#/components/schemas/NotFoundError")),
+            new OA\Response(response: 422, description: "Validation error", content: new OA\JsonContent(ref: "#/components/schemas/ValidationError")),
         ]
     )]
     public function update(Request $request, Book $book){
@@ -110,15 +188,18 @@ class BookController extends Controller
     }
     #[OA\Delete(
         path: "/api/books/{book}",
-        summary: "Supprimer un livre",
+        tags: ["Books"],
+        summary: "Destroy",
         security: [["bearerAuth" => []]],
         parameters: [
-            new OA\Parameter(name: "book", in: "path", required: true, schema: new OA\Schema(type: "integer"))
+            new OA\Parameter(name: "Accept", in: "header", required: true, schema: new OA\Schema(type: "string"), example: "application/json"),
+            new OA\Parameter(name: "Authorization", in: "header", required: true, schema: new OA\Schema(type: "string"), example: "Bearer 1|xxxxxxxxxxxxxxxxxxxxxxxx"),
+            new OA\Parameter(name: "book", in: "path", required: true, schema: new OA\Schema(type: "integer"), example: 12),
         ],
         responses: [
-            new OA\Response(response: 204, description: "Supprimé"),
-            new OA\Response(response: 401, description: "Non authentifié"),
-            new OA\Response(response: 404, description: "Non trouvé")
+            new OA\Response(response: 204, description: "No Content"),
+            new OA\Response(response: 401, description: "Non authentifié", content: new OA\JsonContent(ref: "#/components/schemas/UnauthenticatedError")),
+            new OA\Response(response: 404, description: "Non trouvé", content: new OA\JsonContent(ref: "#/components/schemas/NotFoundError")),
         ]
     )]
     public function destroy(Book $book){
