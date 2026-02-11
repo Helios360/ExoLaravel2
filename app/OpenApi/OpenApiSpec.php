@@ -4,16 +4,19 @@ namespace App\OpenApi;
 
 use OpenApi\Attributes as OA;
 
-#[OA\OpenApi]
-#[OA\Info(
-    version: "1.0.0",
-    title: "Books API",
-    description: "API Laravel (Sanctum) - Auth & Books"
-)]
-#[OA\Server(url: "http://localhost", description: "Local")]
+#[OA\OpenApi(
+    info: new OA\Info(
+        title: "Library API",
+        version: "1.0.0",
+        description: "API d'authentification et gestion de livres (Laravel + Sanctum)."
+    ),
+    servers: [
+        new OA\Server(url: "http://localhost:8000/api/v1", description: "Local"),
+    ]
+)]/*
 #[OA\Tag(name: "Auth", description: "Register / Login / Logout")]
 #[OA\Tag(name: "Books", description: "CRUD Books")]
-
+*/
 #[OA\SecurityScheme(
     securityScheme: "bearerAuth",
     type: "http",

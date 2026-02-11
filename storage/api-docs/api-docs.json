@@ -1,90 +1,118 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "Exolaravel API",
-        "description": "Doc",
+        "title": "Library API",
+        "description": "API d'authentification et gestion de livres (Laravel + Sanctum).",
         "version": "1.0.0"
     },
+    "servers": [
+        {
+            "url": "http://localhost:8000/api/v1",
+            "description": "Local"
+        }
+    ],
     "paths": {
-        "/api/books": {
+        "/books": {
             "get": {
-                "summary": "Lister les livres",
-                "operationId": "9017a3fa89d6636329067c858b27a6fa",
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    }
-                }
-            },
-            "post": {
-                "summary": "Créer un livre",
-                "operationId": "72f82e1cd6f08112323f87053277ca99",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {},
-                            "example": {
-                                "title": "Clean Code",
-                                "author": "Robert C. Martin",
-                                "summary": "A handbook of agile software craftsmanship.",
-                                "isbn": "9780132350884"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Créé"
-                    },
-                    "401": {
-                        "description": "Non authentifié"
-                    },
-                    "422": {
-                        "description": "Validation error"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/books/{book}": {
-            "get": {
-                "summary": "Détail d’un livre",
-                "operationId": "c977385c32095dec31075ca1f77c3cd7",
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Index (liste paginée)",
+                "operationId": "5d5cb268f34aad5d87c4d6006448c123",
                 "parameters": [
                     {
-                        "name": "book",
-                        "in": "path",
+                        "name": "Accept",
+                        "in": "header",
                         "required": true,
                         "schema": {
+                            "type": "string"
+                        },
+                        "example": "application/json"
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
                             "type": "integer"
-                        }
+                        },
+                        "example": 1
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK"
-                    },
-                    "404": {
-                        "description": "Non trouvé"
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "data": [
+                                        {
+                                            "id": 11,
+                                            "title": "Clean Code",
+                                            "author": "Robert C. Martin",
+                                            "summary": "A handbook of agile software craftsmanship.",
+                                            "isbn": "9780132350884",
+                                            "_links": {
+                                                "self": "http://localhost:8000/api/books/1",
+                                                "update": "http://localhost:8000/api/books/1",
+                                                "delete": "http://localhost:8000/api/books/1",
+                                                "all": "http://localhost:8000/api/books"
+                                            }
+                                        }
+                                    ],
+                                    "links": {
+                                        "first": "...",
+                                        "last": "...",
+                                        "prev": null,
+                                        "next": "..."
+                                    },
+                                    "meta": {
+                                        "current_page": 1,
+                                        "per_page": 2,
+                                        "total": 10
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             },
-            "put": {
-                "summary": "Mettre à jour un livre",
-                "operationId": "66285ba337428238f9ea30fdca856ef6",
+            "post": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Store (création)",
+                "operationId": "7ab92284110ace5d0f7de52f372e70c0",
                 "parameters": [
                     {
-                        "name": "book",
-                        "in": "path",
+                        "name": "Accept",
+                        "in": "header",
                         "required": true,
                         "schema": {
-                            "type": "integer"
-                        }
+                            "type": "string"
+                        },
+                        "example": "application/json"
+                    },
+                    {
+                        "name": "Content-Type",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "application/json"
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "Bearer 1|xxxxxxxxxxxxxxxxxxxxxxxx"
                     }
                 ],
                 "requestBody": {
@@ -95,6 +123,189 @@
                             "example": {
                                 "title": "Clean Architecture",
                                 "author": "Robert C. Martin",
+                                "summary": "A guide to software structure and design.",
+                                "isbn": "9780134494166",
+                                "_links": {
+                                    "self": "http://localhost:8000/api/books/1",
+                                    "update": "http://localhost:8000/api/books/1",
+                                    "delete": "http://localhost:8000/api/books/1",
+                                    "all": "http://localhost:8000/api/books"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK (créé)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 12,
+                                        "title": "Clean Architecture",
+                                        "author": "Robert C. Martin",
+                                        "summary": "A guide to software structure and design.",
+                                        "isbn": "9780134494166",
+                                        "_links": {
+                                            "self": "http://localhost:8000/api/books/1",
+                                            "update": "http://localhost:8000/api/books/1",
+                                            "delete": "http://localhost:8000/api/books/1",
+                                            "all": "http://localhost:8000/api/books"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non authentifié",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UnauthenticatedError"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/books/{book}": {
+            "get": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Show (détail)",
+                "operationId": "e2b7b266227828dd53fe29fa36552b23",
+                "parameters": [
+                    {
+                        "name": "Accept",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "application/json"
+                    },
+                    {
+                        "name": "book",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 12
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 12,
+                                        "title": "Clean Architecture",
+                                        "author": "Robert C. Martin",
+                                        "summary": "A guide to software structure and design.",
+                                        "isbn": "9780134494166",
+                                        "_links": {
+                                            "self": "http://localhost:8000/api/books/1",
+                                            "update": "http://localhost:8000/api/books/1",
+                                            "delete": "http://localhost:8000/api/books/1",
+                                            "all": "http://localhost:8000/api/books"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Non trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NotFoundError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Update",
+                "operationId": "478701c722591c0ba42e99d37ec56ad7",
+                "parameters": [
+                    {
+                        "name": "Accept",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "application/json"
+                    },
+                    {
+                        "name": "Content-Type",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "application/json"
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "Bearer 1|xxxxxxxxxxxxxxxxxxxxxxxx"
+                    },
+                    {
+                        "name": "book",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 12
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {},
+                            "example": {
+                                "title": "Clean Architecture (2nd Edition)",
+                                "author": "Robert C. Martin",
                                 "summary": "Updated guide.",
                                 "isbn": "9780134494166"
                             }
@@ -103,16 +314,59 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "OK"
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 12,
+                                        "title": "Clean Architecture (2nd Edition)",
+                                        "author": "Robert C. Martin",
+                                        "summary": "Updated guide.",
+                                        "isbn": "9780134494166",
+                                        "_links": {
+                                            "self": "http://localhost:8000/api/books/1",
+                                            "update": "http://localhost:8000/api/books/1",
+                                            "delete": "http://localhost:8000/api/books/1",
+                                            "all": "http://localhost:8000/api/books"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     },
                     "401": {
-                        "description": "Non authentifié"
+                        "description": "Non authentifié",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UnauthenticatedError"
+                                }
+                            }
+                        }
                     },
                     "404": {
-                        "description": "Non trouvé"
+                        "description": "Non trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NotFoundError"
+                                }
+                            }
+                        }
                     },
                     "422": {
-                        "description": "Validation error"
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -122,27 +376,283 @@
                 ]
             },
             "delete": {
-                "summary": "Supprimer un livre",
-                "operationId": "5bf2d40ecbd2142dabcca0ec2b075369",
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Destroy",
+                "operationId": "0780eb2036bed1adf287d40708a9c033",
                 "parameters": [
+                    {
+                        "name": "Accept",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "application/json"
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "Bearer 1|xxxxxxxxxxxxxxxxxxxxxxxx"
+                    },
                     {
                         "name": "book",
                         "in": "path",
                         "required": true,
                         "schema": {
                             "type": "integer"
-                        }
+                        },
+                        "example": 12
                     }
                 ],
                 "responses": {
                     "204": {
-                        "description": "Supprimé"
+                        "description": "No Content"
                     },
                     "401": {
-                        "description": "Non authentifié"
+                        "description": "Non authentifié",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UnauthenticatedError"
+                                }
+                            }
+                        }
                     },
                     "404": {
-                        "description": "Non trouvé"
+                        "description": "Non trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NotFoundError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Register",
+                "operationId": "482fd8cbb98dc3225fa0e7ac40c1abe6",
+                "parameters": [
+                    {
+                        "name": "Accept",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "application/json"
+                    },
+                    {
+                        "name": "Content-Type",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "application/json"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {},
+                            "example": {
+                                "name": "Abdelkader",
+                                "email": "abdelkader@example.com",
+                                "password": "Password123!"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Créé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Utilisateur créé avec succès"
+                                        },
+                                        "user": {
+                                            "$ref": "#/components/schemas/User"
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "1|xxxxxxxxxxxxxxxxxxxxxxxx"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login",
+                "operationId": "afd167661891a2c4c1b49a04643b9223",
+                "parameters": [
+                    {
+                        "name": "Accept",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "application/json"
+                    },
+                    {
+                        "name": "Content-Type",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "application/json"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {},
+                            "example": {
+                                "email": "abdelkader@example.com",
+                                "password": "Password123!"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Connexion établie"
+                                        },
+                                        "user": {
+                                            "$ref": "#/components/schemas/User"
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "1|xxxxxxxxxxxxxxxxxxxxxxxx"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Identifiants invalides / validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "message": "The given data was invalid.",
+                                    "errors": {
+                                        "email": [
+                                            "Identifiants incorects."
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout",
+                "operationId": "9872a1ded930c0faa99c7f184b4cd654",
+                "parameters": [
+                    {
+                        "name": "Accept",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "application/json"
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "Bearer 1|xxxxxxxxxxxxxxxxxxxxxxxx"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "message": "Déconnexion réussie."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non authentifié",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UnauthenticatedError"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -154,12 +664,112 @@
         }
     },
     "components": {
+        "schemas": {
+            "User": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Abdelkader"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "abdelkader@example.com"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "example": "2026-02-11T10:00:00.000000Z",
+                        "nullable": true
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "example": "2026-02-11T10:00:00.000000Z",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "Book": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 11
+                    },
+                    "title": {
+                        "type": "string",
+                        "example": "Clean Code"
+                    },
+                    "author": {
+                        "type": "string",
+                        "example": "Robert C. Martin"
+                    },
+                    "summary": {
+                        "type": "string",
+                        "example": "A handbook of agile software craftsmanship."
+                    },
+                    "isbn": {
+                        "type": "string",
+                        "example": "9780132350884"
+                    }
+                },
+                "type": "object"
+            },
+            "ValidationError": {
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "The given data was invalid."
+                    },
+                    "errors": {
+                        "type": "object",
+                        "example": {
+                            "email": [
+                                "The email field is required."
+                            ]
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "UnauthenticatedError": {
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "Unauthenticated."
+                    }
+                },
+                "type": "object"
+            },
+            "NotFoundError": {
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "No query results for model [App\\Models\\Book] 999."
+                    }
+                },
+                "type": "object"
+            }
+        },
         "securitySchemes": {
             "bearerAuth": {
                 "type": "http",
+                "description": "Sanctum token. Example: Authorization: Bearer <token>",
                 "bearerFormat": "Token",
                 "scheme": "bearer"
             }
         }
-    }
+    },
+    "tags": [
+        {
+            "name": "Books",
+            "description": "Books"
+        },
+        {
+            "name": "Auth",
+            "description": "Auth"
+        }
+    ]
 }

@@ -13,7 +13,7 @@ use OpenApi\Attributes as OA;
 class BookController extends Controller
 {
     #[OA\Get(
-        path: "/api/books",
+        path: "/books",
         tags: ["Books"],
         summary: "Index (liste paginée)",
         parameters: [
@@ -33,7 +33,13 @@ class BookController extends Controller
                                 "title" => "Clean Code",
                                 "author" => "Robert C. Martin",
                                 "summary" => "A handbook of agile software craftsmanship.",
-                                "isbn" => "9780132350884"
+                                "isbn" => "9780132350884",
+                                "_links" => [
+                                    'self'=> 'http://localhost:8000/api/books/1',
+                                    'update'=> 'http://localhost:8000/api/books/1',
+                                    'delete'=> 'http://localhost:8000/api/books/1',
+                                    'all'=> 'http://localhost:8000/api/books'
+                                ],
                             ]
                         ],
                         "links" => ["first" => "...", "last" => "...", "prev" => null, "next" => "..."],
@@ -44,7 +50,7 @@ class BookController extends Controller
         ]
     )]
     #[OA\Post(
-        path: "/api/books",
+        path: "/books",
         tags: ["Books"],
         summary: "Store (création)",
         security: [["bearerAuth" => []]],
@@ -60,7 +66,13 @@ class BookController extends Controller
                     "title" => "Clean Architecture",
                     "author" => "Robert C. Martin",
                     "summary" => "A guide to software structure and design.",
-                    "isbn" => "9780134494166"
+                    "isbn" => "9780134494166",
+                    "_links" => [
+                                    'self'=> 'http://localhost:8000/api/books/1',
+                                    'update'=> 'http://localhost:8000/api/books/1',
+                                    'delete'=> 'http://localhost:8000/api/books/1',
+                                    'all'=> 'http://localhost:8000/api/books'
+                                ],
                 ]
             )
         ),
@@ -76,7 +88,13 @@ class BookController extends Controller
                             "title" => "Clean Architecture",
                             "author" => "Robert C. Martin",
                             "summary" => "A guide to software structure and design.",
-                            "isbn" => "9780134494166"
+                            "isbn" => "9780134494166",
+                            "_links" => [
+                                'self'=> 'http://localhost:8000/api/books/1',
+                                'update'=> 'http://localhost:8000/api/books/1',
+                                'delete'=> 'http://localhost:8000/api/books/1',
+                                'all'=> 'http://localhost:8000/api/books'
+                            ],
                         ]
                     ]
                 )
@@ -96,7 +114,7 @@ class BookController extends Controller
         return new BookResource($book);
     }
     #[OA\Get(
-        path: "/api/books/{book}",
+        path: "/books/{book}",
         tags: ["Books"],
         summary: "Show (détail)",
         parameters: [
@@ -115,7 +133,13 @@ class BookController extends Controller
                             "title" => "Clean Architecture",
                             "author" => "Robert C. Martin",
                             "summary" => "A guide to software structure and design.",
-                            "isbn" => "9780134494166"
+                            "isbn" => "9780134494166",
+                            "_links" => [
+                                'self'=> 'http://localhost:8000/api/books/1',
+                                'update'=> 'http://localhost:8000/api/books/1',
+                                'delete'=> 'http://localhost:8000/api/books/1',
+                                'all'=> 'http://localhost:8000/api/books'
+                            ],
                         ]
                     ]
                 )
@@ -132,7 +156,7 @@ class BookController extends Controller
         return new BookResource($data);
     }
     #[OA\Put(
-        path: "/api/books/{book}",
+        path: "/books/{book}",
         tags: ["Books"],
         summary: "Update",
         security: [["bearerAuth" => []]],
@@ -165,7 +189,13 @@ class BookController extends Controller
                             "title" => "Clean Architecture (2nd Edition)",
                             "author" => "Robert C. Martin",
                             "summary" => "Updated guide.",
-                            "isbn" => "9780134494166"
+                            "isbn" => "9780134494166",
+                            "_links" => [
+                                'self'=> 'http://localhost:8000/api/books/1',
+                                'update'=> 'http://localhost:8000/api/books/1',
+                                'delete'=> 'http://localhost:8000/api/books/1',
+                                'all'=> 'http://localhost:8000/api/books'
+                            ],
                         ]
                     ]
                 )
@@ -187,7 +217,7 @@ class BookController extends Controller
         return new BookResource($book);
     }
     #[OA\Delete(
-        path: "/api/books/{book}",
+        path: "/books/{book}",
         tags: ["Books"],
         summary: "Destroy",
         security: [["bearerAuth" => []]],
