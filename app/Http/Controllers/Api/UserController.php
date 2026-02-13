@@ -23,8 +23,8 @@ class UserController extends Controller
             required: true,
             content: new OA\JsonContent(
                 example: [
-                    "name" => "Abdelkader",
-                    "email" => "abdelkader@example.com",
+                    "name" => "test",
+                    "email" => "test@example.com",
                     "password" => "Password123!"
                 ]
             )
@@ -79,7 +79,7 @@ class UserController extends Controller
             required: true,
             content: new OA\JsonContent(
                 example: [
-                    "email" => "abdelkader@example.com",
+                    "email" => "test@example.com",
                     "password" => "Password123!"
                 ]
             )

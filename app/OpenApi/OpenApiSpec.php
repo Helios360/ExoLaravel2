@@ -30,8 +30,8 @@ use OpenApi\Attributes as OA;
     type: "object",
     properties: [
         new OA\Property(property: "id", type: "integer", example: 1),
-        new OA\Property(property: "name", type: "string", example: "Abdelkader"),
-        new OA\Property(property: "email", type: "string", example: "abdelkader@example.com"),
+        new OA\Property(property: "name", type: "string", example: "test"),
+        new OA\Property(property: "email", type: "string", example: "test@example.com"),
         new OA\Property(property: "created_at", type: "string", nullable: true, example: "2026-02-11T10:00:00.000000Z"),
         new OA\Property(property: "updated_at", type: "string", nullable: true, example: "2026-02-11T10:00:00.000000Z"),
     ]
